@@ -20,7 +20,7 @@ public class LambdaEx02 {
         System.out.println("result2 = " + result2.calc(5));
 
         //매개변수가 2개인 람다식
-        MyFunction2 add = (x, y) -> { return x + y}; //람다식
+        MyFunction2 add = (x, y) -> { return x + y;}; //람다식
         MyFunction2 minus = (x, y) -> x - y; //람다식 {}, return 생략
         System.out.println("add = " + add.calc(3, 5));
         System.out.println("minus = " + minus.calc(3, 5));
