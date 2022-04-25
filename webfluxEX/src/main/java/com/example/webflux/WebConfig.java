@@ -16,18 +16,34 @@ import java.util.Map;
 public class WebConfig {
 
     @Bean
-    public HandlerMapping handlerMapping() {
-        Map<String, MyWebSocketHandler> map = new HashMap<>();
-        map.put("/path", new MyWebSocketHandler());
-        int order = -1; // before annotated controllers
-
-        return new SimpleUrlHandlerMapping(map, order);
-    }
-
-    @Bean
     public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter();
     }
 
+    @Bean
+    public Flux<Long> flux() {
+        return Flux.interval(Duration.ofMillis(1000L)).share();
+    }
+
+    @Bean
+    public Sinks.Many<String> many(Flux<Long> flux) {
+        Sinks.Many<String> many = Sinks.many().replay().latest();
+        flux.subscribe(p -> many.tryEmitNext(String.valueOf(p)));
+        return many;
+    }
+
+    @Bean
+    public MyWebSocketHandler myWebSocketHandler(Sinks.Many<String> many){
+        return new MyWebSocketHandler(many);
+    }
+
+    @Bean
+    public HandlerMapping handlerMapping(MyWebSocketHandler myWebSocketHandler) {
+        Map<String, MyWebSocketHandler> map = new HashMap<>();
+        map.put("/path", myWebSocketHandler);
+        int order = -1; // before annotated controllers
+
+        return new SimpleUrlHandlerMapping(map, order);
+    }
 }
 
