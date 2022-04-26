@@ -1,5 +1,7 @@
-package com.example.webflux;
+package com.example.webflux.config;
 
+import com.example.webflux.MyWebSocketHandler;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.HandlerMapping;
@@ -30,11 +32,6 @@ public class WebConfig {
         Sinks.Many<String> many = Sinks.many().replay().latest();
         flux.subscribe(p -> many.tryEmitNext(String.valueOf(p)));
         return many;
-    }
-
-    @Bean
-    public MyWebSocketHandler myWebSocketHandler(Sinks.Many<String> many){
-        return new MyWebSocketHandler(many);
     }
 
     @Bean

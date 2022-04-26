@@ -1,4 +1,4 @@
-package com.example.webflux;
+package com.example.webflux.test;
 
 import reactor.blockhound.BlockHound;
 import reactor.core.publisher.Flux;

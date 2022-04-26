@@ -1,0 +1,27 @@
+server:
+  port: 12100
+
+spring:
+  rabbitmq:
+    host: 192.168.20.23
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    function:
+      definition: signalout
+    stream:
+      bindings:
+#        signalin-in-0:
+#          destination: signal.topic
+        signalout-out-0:
+          destination: signal.topic
+#        direct:
+#          binder: rabbit
+#          destination: p2p-topic
+#        broadcast:
+#          binder: rabbit
+#          destination: pubsub_topic
+
+
+

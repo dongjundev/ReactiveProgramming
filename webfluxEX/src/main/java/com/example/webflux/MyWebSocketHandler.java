@@ -1,9 +1,15 @@
 package com.example.webflux;
 
+import com.example.webflux.domain.MyMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+@RequiredArgsConstructor
+@Component
 public class MyWebSocketHandler implements org.springframework.web.reactive.socket.WebSocketHandler {
 
 //    private static Flux<Long> flux = Flux.interval(Duration.ofMillis(1000L)).share();
@@ -14,10 +20,9 @@ public class MyWebSocketHandler implements org.springframework.web.reactive.sock
 //    Sinks.Many<String> many;
 
     private final Sinks.Many<String> many;
+    //private final StreamBridge streamBridge;
 
-    public MyWebSocketHandler(Sinks.Many<String> many) {
-        this.many = many;
-    }
+    private final Sinks.Many<String> signaloutSink;
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
@@ -38,7 +43,13 @@ public class MyWebSocketHandler implements org.springframework.web.reactive.sock
 //        }
 
         session.receive().subscribe(p->many.tryEmitNext(p.getPayloadAsText()));
-        return session.send(many.asFlux().map(p -> session.textMessage(p)));
+        Mono<Void> output = session.send(many.asFlux().map(p -> session.textMessage(p)));
+        Mono<Void> queue = many.asFlux().map(q -> signaloutSink.tryEmitNext(q))
+                .then();
+
+        return Mono.zip(output, queue).then();
+
+//        return session.send(many.asFlux().map(p -> session.textMessage(p)));
 
 //        Mono<Void> input = session.receive()
 //                .doOnNext(m -> System.out.println("client = " + m.getPayloadAsText()))
