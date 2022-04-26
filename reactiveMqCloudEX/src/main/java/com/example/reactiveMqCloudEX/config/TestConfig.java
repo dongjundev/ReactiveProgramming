@@ -10,6 +10,10 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
+
+import java.time.Duration;
 
 @Configuration
 public class TestConfig {
@@ -44,4 +48,18 @@ public class TestConfig {
         rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
+
+    @Bean
+    public Flux<Long> flux() {
+        return Flux.interval(Duration.ofMillis(1000L)).share();
+    }
+
+    @Bean
+    public Sinks.Many<String> many(Flux<Long> flux) {
+        Sinks.Many<String> many = Sinks.many().replay().latest();
+        flux.subscribe(p -> many.tryEmitNext(String.valueOf(p)));
+        return many;
+    }
+
+
 }
