@@ -9,19 +9,16 @@ spring:
     password: guest
   cloud:
     function:
-      definition: signalout
+      definition: signalout;signalin
     stream:
       bindings:
-#        signalin-in-0:
-#          destination: signal.topic
+        signalin-in-0:
+          destination: signal.topic
         signalout-out-0:
           destination: signal.topic
-#        direct:
-#          binder: rabbit
-#          destination: p2p-topic
-#        broadcast:
-#          binder: rabbit
-#          destination: pubsub_topic
-
+  r2dbc:
+    url: r2dbc:postgresql://192.168.20.23:5432/postgres
+    username: postgres
+    password: admin
 
 

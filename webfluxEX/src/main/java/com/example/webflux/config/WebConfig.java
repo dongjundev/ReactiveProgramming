@@ -1,7 +1,6 @@
 package com.example.webflux.config;
 
 import com.example.webflux.MyWebSocketHandler;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.HandlerMapping;
@@ -42,5 +41,24 @@ public class WebConfig {
 
         return new SimpleUrlHandlerMapping(map, order);
     }
+
+
+
+//    @Override
+//    public ConnectionFactory connectionFactory() {
+//        return ConnectionFactories.get(
+//                ConnectionFactoryOptions.builder()
+//                        .option(DRIVER, "postgresql")
+//                        .option(HOST, "192.168.20.23")
+//                        .option(PORT, 5432)
+//                        .option(USER, "postgres")
+//                        .option(DATABASE, "postgres")
+//                        .build());
+//    }
+//
+//    @Bean
+//    ReactiveTransactionManager transactionManager(ConnectionFactory connectionFactory) {
+//        return new R2dbcTransactionManager(connectionFactory);
+//    }
 }
 
