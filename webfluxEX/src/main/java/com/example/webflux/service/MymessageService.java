@@ -26,4 +26,10 @@ public class MymessageService {
 
         return myMessageRepository.findAll();
     }
+
+    public Flux<Mymessage> saveAll(Flux<Mymessage> flux) {
+
+        return myMessageRepository.saveAll(flux);
+    }
+
 }

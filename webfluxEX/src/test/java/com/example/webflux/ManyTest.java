@@ -1,10 +1,7 @@
 package com.example.webflux;
 
 import org.junit.jupiter.api.Test;
-import reactor.core.publisher.EmitterProcessor;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Sinks;
+import reactor.core.publisher.*;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
@@ -66,5 +63,13 @@ class ManyTest {
         many.tryEmitNext("Hello");
         many.tryEmitNext("World");
 
+    }
+
+    @Test
+    public void test4() {
+
+        Flux<Integer> range = Flux.range(1, 5);
+        Mono<Long> count = range.count();
+        System.out.println("value= "+ count);
     }
 }
